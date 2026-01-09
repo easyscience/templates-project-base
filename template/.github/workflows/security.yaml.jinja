@@ -28,7 +28,7 @@ jobs:
       # If this run was triggered by a pull request event, then checkout
       # the head of the pull request instead of the merge commit.
       - run: git checkout HEAD^2
-        if: {% raw %}${{ github.event_name == "pull_request" }}{% endraw %}
+        if: {% raw %}${{ github.event_name == 'pull_request' }}{% endraw %}
 
       - name: Run open source static analysis tools
         uses: github/ossar-action@main
