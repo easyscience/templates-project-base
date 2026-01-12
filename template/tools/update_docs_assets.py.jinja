@@ -14,23 +14,24 @@ import shutil
 GITHUB_REPO = "easyscience/assets-branding"
 GITHUB_BRANCH = "master"
 BASE_URL = f"https://raw.githubusercontent.com/{GITHUB_REPO}/refs/heads/{GITHUB_BRANCH}"
+PROJECT_NAME = "{{ project_name | lower }}"
 
 # Mapping of source files to destination paths
 # Format: "source_path_in_repo": "destination_path_in_project"
 ASSETS_MAP = {
     # Hero images
-    "{{ project_name }}/hero/dark.png": "docs/docs/assets/images/hero_dark.png",
-    "{{ project_name }}/hero/light.png": "docs/docs/assets/images/hero_light.png",
+    f"{PROJECT_NAME}/hero/dark.png": "docs/docs/assets/images/hero_dark.png",
+    f"{PROJECT_NAME}/hero/light.png": "docs/docs/assets/images/hero_light.png",
     
     # Logos
-    "{{ project_name }}/logos/dark.svg": "docs/docs/assets/images/logo_dark.svg",
-    "{{ project_name }}/logos/light.svg": "docs/docs/assets/images/logo_light.svg",
+    f"{PROJECT_NAME}/logos/dark.svg": "docs/docs/assets/images/logo_dark.svg",
+    f"{PROJECT_NAME}/logos/light.svg": "docs/docs/assets/images/logo_light.svg",
     
     # Favicon
-    "{{ project_name }}/icons/color.png": "docs/docs/assets/images/favicon.png",
+    f"{PROJECT_NAME}/icons/color.png": "docs/docs/assets/images/favicon.png",
     
     # Icon overrides
-    "{{ project_name }}/icons/bw.svg": "docs/overrides/.icons/{{ project_name }}.svg",
+    f"{PROJECT_NAME}/icons/bw.svg": f"docs/overrides/.icons/{PROJECT_NAME}.svg",
     "easyscience-org/icons/eso-icon_bw.svg": "docs/overrides/.icons/easyscience.svg",
 }
 
