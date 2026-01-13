@@ -38,8 +38,8 @@ jobs:
       - name: Setup easyscience[bot]
         uses: ./.github/actions/setup-easyscience-bot
         with:
-          app-id: ${% raw %}{{ vars.EASYSCIENCE_APP_ID }}{% endraw %}
-          private-key: ${% raw %}{{ secrets.EASYSCIENCE_APP_KEY }}{% endraw %}
+          app-id: ${{ vars.EASYSCIENCE_APP_ID }}
+          private-key: ${{ secrets.EASYSCIENCE_APP_KEY }}
 
       - name: Create PR from develop to ${{ env.DEFAULT_BRANCH }}
         run: |
