@@ -208,8 +208,8 @@ jobs:
         run: |
           if [[ "${IS_RELEASE_TAG}" == "true" ]]; then
             pixi run docs-deploy-pre "${RELEASE_VERSION#v}" latest
+            pixi run docs-set-default-pre latest
           else
             pixi run docs-deploy-pre dev
           fi
-          pixi run docs-set-default-pre latest
           echo "🔗 deployment url [${% raw %}{{ env.DEPLOYMENT_URL }}{% endraw %}](${% raw %}{{ env.DEPLOYMENT_URL }}{% endraw %})" >> $GITHUB_STEP_SUMMARY
