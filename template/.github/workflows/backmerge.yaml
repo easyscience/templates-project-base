@@ -38,8 +38,8 @@ jobs:
       - name: Setup easyscience[bot]
         uses: ./.github/actions/setup-easyscience-bot
         with:
-          app-id: ${% raw %}{{ vars.EASYSCIENCE_APP_ID }}{% endraw %}
-          private-key: ${% raw %}{{ secrets.EASYSCIENCE_APP_KEY }}{% endraw %}
+          app-id: ${{ vars.EASYSCIENCE_APP_ID }}
+          private-key: ${{ secrets.EASYSCIENCE_APP_KEY }}
 
       - name: Merge master into develop
         run: |
@@ -47,7 +47,7 @@ jobs:
           set -euo pipefail
 
           # Get the tag name variable to be used in the commit message
-          TAG='${% raw %}{{ github.ref_name }}{% endraw %}'
+          TAG='${{ github.ref_name }}'
 
           # Ensure local develop branch exists and is up-to-date with origin
           git fetch origin develop:develop
