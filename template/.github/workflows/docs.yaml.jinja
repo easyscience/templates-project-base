@@ -42,11 +42,11 @@ env:
   # For tags: github.ref_name is the tag name
   # GITHUB_REPOSITORY - the repository name (used in mkdocs.yml)
   # NOTEBOOKS_DIR - the directory containing the Jupyter notebooks (used in mkdocs.yml)
-  DEFAULT_BRANCH: ${% raw %}{{ github.event.repository.default_branch }}{% endraw %}
+  DEFAULT_BRANCH: {% raw %}${{ github.event.repository.default_branch }}{% endraw %}
   DEVELOP_BRANCH: develop
-  CI_BRANCH: ${% raw %}{{ github.head_ref || github.ref_name }}{% endraw %}
-  IS_RELEASE_TAG: ${% raw %}{{ startsWith(github.ref, 'refs/tags/v') }}{% endraw %}
-  GITHUB_REPOSITORY: ${% raw %}{{ github.repository }}{% endraw %}
+  CI_BRANCH: {% raw %}${{ github.head_ref || github.ref_name }}{% endraw %}
+  IS_RELEASE_TAG: {% raw %}${{ startsWith(github.ref, 'refs/tags/v') }}{% endraw %}
+  GITHUB_REPOSITORY: {% raw %}${{ github.repository }}{% endraw %}
   NOTEBOOKS_DIR: tutorials
 
 jobs:
@@ -57,7 +57,7 @@ jobs:
       matrix:
         os: [macos-latest]
 
-    runs-on: ${% raw %}{{ matrix.os }}{% endraw %}
+    runs-on: {% raw %}${{ matrix.os }}{% endraw %}
 
     permissions:
       contents: write # Required for pushing to the gh-pages branch
@@ -93,8 +93,8 @@ jobs:
       - name: Setup easyscience[bot]
         uses: ./.github/actions/setup-easyscience-bot
         with:
-          app-id: ${% raw %}{{ vars.EASYSCIENCE_APP_ID }}{% endraw %}
-          private-key: ${% raw %}{{ secrets.EASYSCIENCE_APP_KEY }}{% endraw %}
+          app-id: {% raw %}${{ vars.EASYSCIENCE_APP_ID }}{% endraw %}
+          private-key: {% raw %}${{ secrets.EASYSCIENCE_APP_KEY }}{% endraw %}
 
       # Activate dark mode to create documentation with Plotly charts in dark mode
       # Need a better solution to automatically switch the chart colour theme based on the mkdocs material switcher
@@ -148,7 +148,7 @@ jobs:
       - name: Upload built site as artifact
         uses: ./.github/actions/upload-artifact
         with:
-          name: site-local_{{ project_name | lower }}-lib-${% raw %}{{ env.RELEASE_VERSION }}{% endraw %}
+          name: site-local_{{ project_name | lower }}-lib-{% raw %}${{ env.RELEASE_VERSION }}{% endraw %}
           path: docs/site/
 
       # Fetch the gh-pages branch to ensure mike has the latest remote state.
@@ -168,7 +168,7 @@ jobs:
           # Exit on error (-e), undefined vars (-u), and pipeline failures (pipefail)
           set -euo pipefail
 
-          REPO_NAME="${% raw %}{{ github.event.repository.name }}{% endraw %}"
+          REPO_NAME="{% raw %}${{ github.event.repository.name }}{% endraw %}"
           BASE_URL="https://easyscience.github.io/${REPO_NAME}"
 
           if [[ "${IS_RELEASE_TAG}" == "true" ]]; then

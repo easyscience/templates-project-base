@@ -40,12 +40,12 @@ permissions:
 # in-progress and latest queued. And cancel in-progress runs.
 concurrency:
   group:
-    ${% raw %}{{ github.workflow }}{% endraw %}-${% raw %}{{ github.event.pull_request.number || github.ref }}{% endraw %}
+    {% raw %}${{ github.workflow }}{% endraw %}-{% raw %}${{ github.event.pull_request.number || github.ref }}{% endraw %}
   cancel-in-progress: true
 
 # Set the environment variables to be used in all jobs defined in this workflow
 env:
-  CI_BRANCH: ${% raw %}{{ github.head_ref || github.ref_name }}{% endraw %}
+  CI_BRANCH: {% raw %}${{ github.head_ref || github.ref_name }}{% endraw %}
   PY_VERSIONS: '{{ lib_python_min }} {{ lib_python_max }}'
   PIXI_ENVS: "py-{{ lib_python_min | replace('.', '') }}-env py-{{ lib_python_max | replace('.', '') }}-env"
 
@@ -55,7 +55,7 @@ jobs:
     runs-on: [ubuntu-latest]
 
     outputs:
-      pytest-marks: ${% raw %}{{ steps.set-mark.outputs.pytest_marks }}{% endraw %}
+      pytest-marks: {% raw %}${{ steps.set-mark.outputs.pytest_marks }}{% endraw %}
 
     steps:
       # Determine if integration tests should be run fully or only the fast ones
@@ -63,7 +63,7 @@ jobs:
       - name: Set mark for integration tests
         id: set-mark
         run: |
-          if [[ "${% raw %}{{ env.CI_BRANCH }}{% endraw %}" == "master" || "${% raw %}{{ env.CI_BRANCH }}{% endraw %}" == "develop" ]]; then
+          if [[ "{% raw %}${{ env.CI_BRANCH }}{% endraw %}" == "master" || "{% raw %}${{ env.CI_BRANCH }}{% endraw %}" == "develop" ]]; then
             echo "pytest_marks=" >> $GITHUB_OUTPUT
           else
             echo "pytest_marks=-m fast" >> $GITHUB_OUTPUT
@@ -78,7 +78,7 @@ jobs:
       matrix:
         os: [ubuntu-24.04, macos-14, windows-2022]
 
-    runs-on: ${% raw %}{{ matrix.os }}{% endraw %}
+    runs-on: {% raw %}${{ matrix.os }}{% endraw %}
 
     steps:
       - name: Checkout repository
@@ -87,7 +87,7 @@ jobs:
       - name: Set up pixi
         uses: ./.github/actions/setup-pixi
         with:
-          environments: ${% raw %}{{ env.PIXI_ENVS }}{% endraw %}
+          environments: {% raw %}${{ env.PIXI_ENVS }}{% endraw %}
 
       - name: Run unit tests
         shell: bash
@@ -105,7 +105,7 @@ jobs:
           done
 
       - name:
-          Run integration tests ${% raw %}{{ needs.env-prepare.outputs.pytest-marks }}{% endraw %}
+          Run integration tests {% raw %}${{ needs.env-prepare.outputs.pytest-marks }}{% endraw %}
         shell: bash
         run: |
           set -euo pipefail
@@ -117,7 +117,7 @@ jobs:
             env="py-$(echo $py_ver | tr -d .)-env" # Converts 3.11 -> py-311-env
 
             echo "Running tests in environment: $env"
-            pixi run --environment $env integration-tests ${% raw %}{{ needs.env-prepare.outputs.pytest-marks }}{% endraw %}
+            pixi run --environment $env integration-tests {% raw %}${{ needs.env-prepare.outputs.pytest-marks }}{% endraw %}
           done
 
       # Delete all local tags when not on a tagged commit to force versioningit
@@ -156,7 +156,7 @@ jobs:
       - name: Upload package (incl. extras) for next job
         uses: ./.github/actions/upload-artifact
         with:
-          name: {{ project_name | lower }}_${% raw %}{{ matrix.os }}{% endraw %}_${% raw %}{{ runner.arch }}{% endraw %}
+          name: {{ project_name | lower }}_{% raw %}${{ matrix.os }}{% endraw %}_{% raw %}${{ runner.arch }}{% endraw %}
           path: dist/
 
   # Job 3: Test the package
@@ -168,7 +168,7 @@ jobs:
       matrix:
         os: [ubuntu-24.04, macos-14, windows-2022]
 
-    runs-on: ${% raw %}{{ matrix.os }}{% endraw %}
+    runs-on: {% raw %}${{ matrix.os }}{% endraw %}
 
     steps:
       - name: Checkout repository
@@ -178,7 +178,7 @@ jobs:
         uses: ./.github/actions/download-artifact
         with:
           # name and path should be taken from the upload step of the previous job
-          name: {{ project_name | lower }}_${% raw %}{{ matrix.os }}{% endraw %}_${% raw %}{{ runner.arch }}{% endraw %}
+          name: {{ project_name | lower }}_{% raw %}${{ matrix.os }}{% endraw %}_{% raw %}${{ runner.arch }}{% endraw %}
           path: dist/
 
       - name: Set up pixi
@@ -249,7 +249,7 @@ jobs:
           done
 
       - name:
-          Run integration tests ${% raw %}{{ needs.env-prepare.outputs.pytest-marks }}{% endraw %}
+          Run integration tests {% raw %}${{ needs.env-prepare.outputs.pytest-marks }}{% endraw %}
         shell: bash
         run: |
           set -euo pipefail
@@ -262,7 +262,7 @@ jobs:
             cd {{ lib_package_name }}_py$py_ver
 
             echo "Running tests"
-            pixi run python -m pytest ../tests/integration/ --color=yes -n auto -v ${% raw %}{{ needs.env-prepare.outputs.pytest-marks }}{% endraw %}
+            pixi run python -m pytest ../tests/integration/ --color=yes -n auto -v {% raw %}${{ needs.env-prepare.outputs.pytest-marks }}{% endraw %}
 
             echo "Exiting pixi project directory"
             cd ..
@@ -281,11 +281,11 @@ jobs:
   #    - name: Trigger dashboard build
   #      uses: actions/github-script@v7
   #      with:
-  #        github-token: ${% raw %}{{ secrets.GITHUB_TOKEN }}{% endraw %}
+  #        github-token: {% raw %}${{ secrets.GITHUB_TOKEN }}{% endraw %}
   #        script: |
   #          await github.rest.actions.createWorkflowDispatch({
   #            owner: context.repo.owner,
   #            repo: context.repo.repo,
   #            workflow_id: "dashboard.yaml",
-  #            ref: "${% raw %}{{ env.CI_BRANCH }}{% endraw %}"
+  #            ref: "{% raw %}${{ env.CI_BRANCH }}{% endraw %}"
   #          });

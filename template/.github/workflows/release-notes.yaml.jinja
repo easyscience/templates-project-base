@@ -56,14 +56,14 @@ jobs:
                 labels: ['[scope] maintenance', '[scope] documentation']
 
         env:
-          GITHUB_TOKEN: ${% raw %}{{ secrets.GITHUB_TOKEN }}{% endraw %}
+          GITHUB_TOKEN: {% raw %}${{ secrets.GITHUB_TOKEN }}{% endraw %}
 
       - name: Create GitHub draft release
         uses: softprops/action-gh-release@v2
         with:
           draft: true
-          tag_name: ${% raw %}{{ steps.draft.outputs.tag_name }}{% endraw %}
-          name: ${% raw %}{{ steps.draft.outputs.release_name }}{% endraw %}
-          body: ${% raw %}{{ steps.draft.outputs.release_notes }}{% endraw %}
+          tag_name: {% raw %}${{ steps.draft.outputs.tag_name }}{% endraw %}
+          name: {% raw %}${{ steps.draft.outputs.release_name }}{% endraw %}
+          body: {% raw %}${{ steps.draft.outputs.release_notes }}{% endraw %}
         env:
-          GITHUB_TOKEN: ${% raw %}{{ secrets.GITHUB_TOKEN }}{% endraw %}
+          GITHUB_TOKEN: {% raw %}${{ secrets.GITHUB_TOKEN }}{% endraw %}

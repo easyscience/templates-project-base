@@ -19,12 +19,12 @@ on:
 # in-progress and latest queued. And cancel in-progress runs.
 concurrency:
   group:
-    ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+    {% raw %}${{ github.workflow }}{% endraw %}-{% raw %}${{ github.event.pull_request.number || github.ref }}{% endraw %}
   cancel-in-progress: true
 
 # Set the environment variables to be used in all jobs defined in this workflow
 env:
-  CI_BRANCH: ${{ github.head_ref || github.ref_name }}
+  CI_BRANCH: {% raw %}${{ github.head_ref || github.ref_name }}{% endraw %}
 
 jobs:
   # Job 1: Test tutorials as scripts and notebooks on multiple OS
