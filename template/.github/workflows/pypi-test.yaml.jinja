@@ -48,25 +48,32 @@ jobs:
         run: pixi init {{ lib_package_name }}
 
       - name: Add Python {{ lib_python_max }} from Conda
+        working-directory: {{ lib_package_name }}
         run: pixi add "python={{ lib_python_max }}"
 
       - name: Add other Conda dependencies
+        working-directory: {{ lib_package_name }}
         run: pixi add gsl
 
       - name: Add {{ lib_package_name }} from PyPI
+        working-directory: {{ lib_package_name }}
         run: pixi add --pypi "{{ lib_package_name }}[dev]"
 
       - name: Add Pixi task as a shortcut
+        working-directory: {{ lib_package_name }}
         run: pixi task add {{ lib_package_name }} "python -m {{ lib_package_name }}"
 
       - name: Run unit tests to verify the installation
+        working-directory: {{ lib_package_name }}
         run: pixi run python -m pytest ../tests/unit/ --color=yes -v
 
       - name: Run integration tests to verify the installation
+        working-directory: {{ lib_package_name }}
         run: pixi run python -m pytest ../tests/integration/ --color=yes -n auto
 
       # Github token to avoid hitting the unauthenticated API rate limit
       - name: List and fetch the {{ lib_package_name }} tutorials
+        working-directory: {{ lib_package_name }}
         env:
           GITHUB_TOKEN: {% raw %}${{ secrets.GITHUB_TOKEN }}{% endraw %}
         run: |
@@ -75,6 +82,7 @@ jobs:
           pixi run {{ lib_package_name }} download-all-tutorials
 
       - name: Test tutorials as notebooks
+        working-directory: {{ lib_package_name }}
         run: pixi run notebook-tests
 
   # Job 2: Trigger dashboard build
