@@ -27,9 +27,12 @@ jobs:
       - name: Set up pixi
         uses: ./.github/actions/setup-pixi
 
-      - name: Install and setup development dependencies
-        shell: bash
-        run: pixi run dev
+      - name: Setup easyscience[bot]
+        id: bot
+        uses: ./.github/actions/setup-easyscience-bot
+        with:
+          app-id: {% raw %}${{ vars.EASYSCIENCE_APP_ID }}{% endraw %}
+          private-key: {% raw %}${{ secrets.EASYSCIENCE_APP_KEY }}{% endraw %}
 
       - name: Drafts the next release notes
         id: draft
@@ -56,7 +59,7 @@ jobs:
                 labels: ['[scope] maintenance', '[scope] documentation']
 
         env:
-          GITHUB_TOKEN: {% raw %}${{ secrets.GITHUB_TOKEN }}{% endraw %}
+          GITHUB_TOKEN: {% raw %}${{ steps.bot.outputs.token }}{% endraw %}
 
       - name: Create GitHub draft release
         uses: softprops/action-gh-release@v2
@@ -66,4 +69,4 @@ jobs:
           name: {% raw %}${{ steps.draft.outputs.release_name }}{% endraw %}
           body: {% raw %}${{ steps.draft.outputs.release_notes }}{% endraw %}
         env:
-          GITHUB_TOKEN: {% raw %}${{ secrets.GITHUB_TOKEN }}{% endraw %}
+          GITHUB_TOKEN: {% raw %}${{ steps.bot.outputs.token }}{% endraw %}
