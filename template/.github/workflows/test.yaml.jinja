@@ -268,19 +268,8 @@ jobs:
             cd ..
           done
 
-  # Job 4: Trigger dashboard build
-  dashboard-build-trigger:
+  # Job 4: Build and publish dashboard (reusable workflow)
+  run-reusable-workflows:
     needs: package-test # depend on previous job
-
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Check-out repository
-        uses: actions/checkout@v5
-
-      - name: Trigger dashboard build
-        uses: ./.github/actions/trigger-dashboard
-        with:
-          ref: {% raw %}${{ env.CI_BRANCH }}{% endraw %}
-          app-id: {% raw %}${{ vars.EASYSCIENCE_APP_ID }}{% endraw %}
-          private-key: {% raw %}${{ secrets.EASYSCIENCE_APP_KEY }}{% endraw %}
+    uses: ./.github/workflows/dashboard.yaml
+    secrets: inherit
