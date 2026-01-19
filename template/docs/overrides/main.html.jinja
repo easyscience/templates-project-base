@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if page.nb_url %}
+  {# Set up URLs #}
+  {% set tutorial_name = page.nb_url.split('/')[-2] %}
+  {% set filename = page.nb_url.split('/')[-1] %}
+  {% set docs_version = {% raw %}{{ config.extra.vars.docs_version }}{% endraw %} %}
+  {% set base_colab_url = https://colab.research.google.com/github/easyscience %}
+  {% set repo = {% raw %}{{ lib_repo_name }}{% endraw %} %}
+  {% set colab_url = base_colab_url + '/' + repo + '/blob/gh-pages/' + docs_version + '/tutorials/' + tutorial_name + '/' + filename %}
+  {% set file_url = filename %}
+
+  {# Open in Colab (absolute GitHub URL; works anywhere) #}
+  <a href="{% raw %}{{ colab_url }}{% endraw %}"
+     title="Open in Google Colab"
+     class="md-content__button md-icon">
+    {% include ".icons/google-colab.svg" %}
+  </a>
+
+  {# Download: use a RELATIVE link to the file next to this page #}
+  <a href="{% raw %}{{ file_url }}{% endraw %}"
+     download="{% raw %}{{ file_url }}{% endraw %}"
+     title="Download Notebook"
+     class="md-content__button md-icon">
+    {% include ".icons/material/download.svg" %}
+  </a>
+{% endif %}
+
+{% raw %}{{ super() }}{% endraw %}
+{% endblock content %}
