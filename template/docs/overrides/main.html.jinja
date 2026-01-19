@@ -8,9 +8,9 @@
   {% set filename = parts[-1] %}
 
   {# Inputs #}
-  {% set docs_version = {{ config.extra.vars.docs_version }} %}
+  {% set docs_version = "{% raw %}{{ config.extra.vars.docs_version }}{% endraw %}" %}
   {% set base_colab_url = "https://colab.research.google.com/github/easyscience" %}
-  {% set repo = {{ lib_repo_name }} %}
+  {% set repo = "{% raw %}{{ lib_repo_name }}{% endraw %}" %}
 
   {# Colab url #}
   {% set colab_url =
