@@ -32,14 +32,14 @@ project_copyright_years:
   default: 2021-2026
   help: What is the project's copyright year(s)?
 
-home_repo_name:
+project_repo_name:
   type: str
   default: '{{ project_name | replace("Easy", "") | lower }}'
   help: What is the project home repository under EasyScience organization?
 
-homepage_url:
+project_homepage_url:
   type: str
-  default: 'https://easyscience.github.io/{{ home_repo_name }}'
+  default: 'https://easyscience.github.io/{{ project_repo_name }}'
   help: What is the project's home page URL?
 
 project_contact_email:
