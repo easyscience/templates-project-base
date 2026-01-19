@@ -5,9 +5,9 @@ def test_import_{{lib_package_name}}():
 
 
 def test_dummy_function():
-    from easydiffraction.dummy import dummy_function
+    from {{lib_package_name}}.dummy import dummy_function
 
     result = dummy_function()
 
-    assert result == "Hello from easydiffraction"
+    assert result == "Hello from {{lib_package_name}}"
     assert isinstance(result, str)
