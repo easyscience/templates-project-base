@@ -1,6 +1,6 @@
-{% if _type == lib %}
+{% if _project_type == lib %}
   {% set repo_name = lib_repo_name %}
-{% elif _type == app %}
+{% elif _project_type == app %}
   {% set repo_name = app_repo_name %}
 {% endif %}
 
